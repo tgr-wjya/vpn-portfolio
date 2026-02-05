@@ -1,0 +1,25 @@
+# SSH keys and certificates
+configs/vpn-key
+configs/vpn-key.pub
+configs/*.pem
+configs/*.pub
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/.terraformrc
+terraform/override.tf
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Doppler
+.doppler.yaml
+.env.local
