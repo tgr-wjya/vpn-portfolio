@@ -1,72 +1,70 @@
 # vpn-portfolio
 
-personal wireguard vpn infrastructure deployed on aws using terraform
+i over-engineered a private vpn because i don't trust anyone, including myself.
 
-## ⚠️ important notice
+---
 
-this project is **not intended for public use**. it requires:
-- active aws account with valid credentials
-- terraform cli installed locally
-- ssh key pair configuration
-- understanding of cloud infrastructure costs
+## what this is
 
-this is a learning/portfolio project. do not clone and run without understanding the infrastructure and associated aws costs.
+automated deployment of a wireguard vpn server on aws ec2. i built this to prove i could handle infrastructure-as-code without accidentally bankrupting myself.
 
-## what this does
+**disclaimer:** if you clone this and leave it running, jeff bezos will personally thank you for the donation. check the `terraform/` directory before you hit deploy.
 
-automated deployment of a wireguard vpn server on aws ec2 infrastructure. built to understand infrastructure-as-code principles and cloud networking fundamentals.
+## "features"
 
-**key features:**
-- automated ec2 instance provisioning
-- wireguard vpn server setup
-- security group configuration
-- elastic ip allocation
-- one-command deployment and teardown
+- **automated overkill:** ec2 provisioning that works 60% of the time, every time. it either work, or it doesn't
+- **wireguard setup:** fast, modern, and makes me feel like a sysadmin.
+- **the kill switch:** one-command teardown for when the aws bill gets scary.
+- **security:** security groups tight to make this whole project secure.
 
-## architecture
+## stack
 
-**infrastructure:** terraform · aws ec2 · elastic ip · security groups  
-**vpn protocol:** wireguard  
-**deployment:** powershell scripts  
-**server os:** ubuntu 22.04 lts
+**infra:** terraform · aws ec2 · vpc · elastic ip
+
+**vpn:** wireguard (ubuntu 22.04 lts)
+
+**glue:** powershell · bash · caffeine
 
 ## project structure
 
 ```
-├── configs/          # ssh keys (gitignored)
-├── scripts/          
-│   ├── deploy.ps1    # automated deployment
+├── configs/          # ssh keys (gitignored for obvious reasons)
+├── scripts/
+│   ├── deploy.ps1    # the "mvp" button
 │   └── setup.sh      # server configuration
-└── terraform/        
+└── terraform/
     ├── main.tf       # infrastructure definition
-    └── destroy.ps1   # cleanup script
+    └── destroy.ps1   # the "emergency stop" button
+
 ```
 
-## deployment
+## how to use (at your own risk)
 
 **prerequisites:**
-- aws cli configured with valid credentials
-- terraform installed
+
+- aws cli (configured with actual money in the account)
+- terraform (installed and not broken)
 - ssh key pair generated in `configs/`
 
-**deploy:**
-```powershell
-.\scripts\deploy.ps1
-```
+**commands:**
 
-**destroy:**
 ```powershell
+# step 1: deploy it if you will
+.\scripts\deploy.ps1
+
+# step 2: destroy before the billing cycle ends.
 cd terraform
 .\destroy.ps1
+
 ```
 
 ## learning outcomes
 
-- infrastructure as code with terraform
-- aws vpc and security group management
-- wireguard vpn protocol configuration
-- automated cloud provisioning workflows
+- terraform is great! don't let anyone tell you otherwise.
+- networking is not that scary.
+- automated workflows save lives, lifted my burden (and wallets).
+- wow, this is truly over-engineering
 
 ---
 
-**note:** all sensitive files (ssh keys, terraform state) are excluded from version control via .gitignore
+made with ◉‿◉
