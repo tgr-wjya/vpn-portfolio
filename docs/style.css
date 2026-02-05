@@ -1,0 +1,461 @@
+/*
+  vpn-portfolio showcase
+  matching the aesthetic of the main portfolio
+
+  design notes:
+  - dark, minimal, monospaced
+  - subtle animations
+  - self-aware tone
+*/
+
+:root {
+  /* colors */
+  --bg: #0a0a0a;
+  --bg-subtle: #111111;
+  --text: #e0e0e0;
+  --text-muted: #666666;
+  --text-subtle: #444444;
+  --accent: #888888;
+  --border: #222222;
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --error: #ef4444;
+
+  /* typography */
+  --font-mono: "Space Mono", monospace;
+  --font-sans: "Inter", -apple-system, sans-serif;
+
+  /* spacing */
+  --space-xs: 0.5rem;
+  --space-sm: 1rem;
+  --space-md: 2rem;
+  --space-lg: 4rem;
+  --space-xl: 6rem;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  line-height: 1.7;
+  min-height: 100vh;
+
+  /* subtle texture */
+  background-image:
+    radial-gradient(circle at 25% 25%, #111 0%, transparent 50%),
+    radial-gradient(circle at 75% 75%, #0d0d0d 0%, transparent 50%);
+}
+
+.container {
+  max-width: 650px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-md);
+}
+
+/* header */
+header {
+  margin-bottom: var(--space-lg);
+}
+
+.header-main {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
+}
+
+h1 {
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+}
+
+.version {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.tagline {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  margin-top: var(--space-xs);
+}
+
+/* sections */
+h2 {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  margin-bottom: var(--space-sm);
+  text-transform: lowercase;
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-md) 0;
+  opacity: 0.6;
+}
+
+/* intro */
+.intro p {
+  margin-bottom: var(--space-xs);
+}
+
+.note {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  color: var(--text-subtle);
+  font-style: italic;
+  margin-top: var(--space-sm);
+}
+
+/* mermaid diagram */
+.mermaid-container {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  padding: var(--space-md);
+  overflow-x: auto;
+}
+
+.mermaid {
+  display: flex;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
+}
+
+.architecture-note {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  font-style: italic;
+  margin-top: var(--space-sm);
+}
+
+/* stack section */
+.stack-group {
+  display: flex;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-xs);
+  align-items: baseline;
+}
+
+.stack-label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  min-width: 110px;
+}
+
+.stack-items {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.stack-note {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-subtle);
+  font-style: italic;
+  margin-top: var(--space-sm);
+  opacity: 0.7;
+}
+
+/* code showcase */
+.code-block {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  overflow: hidden;
+}
+
+.code-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-xs) var(--space-sm);
+  background: #0d0d0d;
+  border-bottom: 1px solid var(--border);
+}
+
+.code-header span {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.code-copy {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  background: transparent;
+  border: 1px solid var(--border);
+  padding: 0.25rem 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.code-copy:hover {
+  color: var(--text);
+  border-color: var(--text-subtle);
+}
+
+.code-copy.copied {
+  color: var(--success);
+  border-color: var(--success);
+}
+
+pre {
+  padding: var(--space-sm);
+  overflow-x: auto;
+  margin: 0;
+}
+
+code {
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.code-note {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  font-style: italic;
+  margin-top: var(--space-sm);
+}
+
+/* cost breakdown */
+.cost-breakdown {
+  background: var(--bg-subtle);
+  border: 1px solid var(--border);
+  padding: var(--space-sm);
+}
+
+.cost-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding: var(--space-xs) 0;
+}
+
+.cost-label {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+.cost-amount {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--text);
+}
+
+.cost-divider {
+  height: 1px;
+  background: var(--border);
+  margin: var(--space-xs) 0;
+}
+
+.cost-item.total .cost-label,
+.cost-item.total .cost-amount {
+  font-weight: 500;
+  color: var(--text);
+}
+
+.cost-note {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+  font-style: italic;
+  margin-top: var(--space-sm);
+}
+
+/* lessons learned */
+.lessons-list {
+  list-style: none;
+}
+
+.lessons-list li {
+  margin-bottom: var(--space-sm);
+  padding-left: var(--space-sm);
+  border-left: 2px solid var(--border);
+  transition: border-color 0.2s ease;
+}
+
+.lessons-list li:hover {
+  border-left-color: var(--text-subtle);
+}
+
+.lesson-title {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.9rem;
+  color: var(--text);
+  margin-bottom: 0.25rem;
+}
+
+.lesson-note {
+  display: block;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* cta section */
+.links {
+  display: flex;
+  gap: var(--space-xs);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-sm);
+}
+
+.links a {
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.links a:hover {
+  color: var(--text);
+}
+
+.separator {
+  color: var(--text-subtle);
+}
+
+.warning {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--warning);
+  padding: var(--space-sm);
+  background: rgba(251, 191, 36, 0.05);
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  margin-top: var(--space-sm);
+}
+
+/* footer */
+footer {
+  margin-top: var(--space-xl);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.last-updated {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--text-subtle);
+}
+
+.deployment-status {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.deployment-status:hover {
+  opacity: 0.8;
+}
+
+.status-indicator {
+  font-size: 0.5rem;
+  color: var(--text-subtle);
+  transition: color 0.3s ease;
+}
+
+.status-indicator.deploying {
+  color: var(--warning);
+  animation: pulse 1s ease-in-out infinite;
+}
+
+.status-indicator.success {
+  color: var(--success);
+}
+
+.status-indicator.error {
+  color: var(--error);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
+.status-text {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: var(--text-subtle);
+}
+
+/* selection */
+::selection {
+  background: var(--accent);
+  color: var(--bg);
+}
+
+/* responsive */
+@media (max-width: 480px) {
+  .container {
+    padding: var(--space-lg) var(--space-sm);
+  }
+
+  h1 {
+    font-size: 1.25rem;
+  }
+
+  .flow-step {
+    padding: var(--space-xs);
+  }
+
+  .stack-group {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .stack-label {
+    min-width: unset;
+    opacity: 0.7;
+  }
+
+  footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: var(--space-sm);
+  }
+}
+
+/*
+  still reading the css?
+
+  you're either:
+  a) debugging something
+  b) procrastinating
+  c) genuinely curious
+
+  either way, respect.
+*/

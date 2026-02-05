@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>vpn-portfolio · case study showcase</title>
+    <meta
+      name="description"
+      content="how i over-engineered a vpn because i don't trust anyone"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: "dark",
+        themeVariables: {
+          darkMode: true,
+          background: "#0a0a0a",
+          primaryColor: "#111111",
+          primaryTextColor: "#e0e0e0",
+          primaryBorderColor: "#222222",
+          lineColor: "#666666",
+          secondaryColor: "#0d0d0d",
+          tertiaryColor: "#131313",
+          fontFamily: "Space Mono, monospace",
+          fontSize: "14px",
+        },
+      });
+    </script>
+  </head>
+  <body>
+    <div class="container">
+      <header>
+        <div class="header-main">
+          <h1>vpn-portfolio</h1>
+          <span class="version">case study showcase</span>
+        </div>
+        <p class="tagline">
+          [ how i over-engineered a vpn using aws infra and terraform so you
+          could do some unrestricted stuff without anyone knowing... ]
+        </p>
+      </header>
+
+      <div class="divider"></div>
+
+      <section class="intro">
+        <p>i built a wireguard vpn from scratch on aws.</p>
+        <p>using terraform for infrastructure-as-code.</p>
+        <p>because apparently i could.</p>
+        <p class="note">
+          — this is a learning project. it's not recommended to clone and
+          actually run this project.
+        </p>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="architecture">
+        <h2>architecture diagram</h2>
+        <div class="mermaid-container">
+          <pre class="mermaid">
+graph TB
+    subgraph local["💻 local machine"]
+        A[deploy.ps1] --> B[terraform CLI]
+    end
+
+    subgraph aws["☁️ aws infrastructure"]
+        B --> C[VPC]
+        C --> D[Security Group]
+        D --> E[EC2 t3.micro]
+        D --> F[Elastic IP]
+        E --> G[WireGuard Server]
+    end
+
+    subgraph vpn["🔐 vpn connection"]
+        G --> H[Encrypted Tunnel]
+        H --> I[Internet Traffic]
+    end
+
+    J[Your Device] -.->|WireGuard Client| H
+
+    style local fill:#111,stroke:#222,color:#e0e0e0
+    style aws fill:#111,stroke:#222,color:#e0e0e0
+    style vpn fill:#111,stroke:#222,color:#e0e0e0
+    style A fill:#0d0d0d,stroke:#444,color:#e0e0e0
+    style B fill:#0d0d0d,stroke:#444,color:#e0e0e0
+    style E fill:#0d0d0d,stroke:#666,color:#e0e0e0,stroke-width:2px
+    style G fill:#0d0d0d,stroke:#666,color:#e0e0e0,stroke-width:2px
+    style H fill:#0d0d0d,stroke:#4ade80,color:#e0e0e0,stroke-width:2px
+          </pre>
+        </div>
+        <p class="architecture-note">
+          — one powershell script orchestrates everything. which mean bigger
+          chance of something breaking.
+        </p>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="stack">
+        <h2>tech stack</h2>
+        <div class="stack-group">
+          <span class="stack-label">infrastructure</span>
+          <span class="stack-items"
+            >terraform · aws ec2 · vpc · elastic ip · security groups</span
+          >
+        </div>
+        <div class="stack-group">
+          <span class="stack-label">vpn protocol</span>
+          <span class="stack-items">wireguard (ubuntu 22.04 lts)</span>
+        </div>
+        <div class="stack-group">
+          <span class="stack-label">automation</span>
+          <span class="stack-items">powershell · bash scripts</span>
+        </div>
+        <p class="stack-note">
+          deployed in ap-southeast-1 (singapore) to minimize latency.
+        </p>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="code-showcase">
+        <h2>key terraform config</h2>
+        <div class="code-block">
+          <div class="code-header">
+            <span>terraform/main.tf</span>
+            <button
+              class="code-copy"
+              data-code="terraform-main"
+              aria-label="copy code"
+            >
+              copy
+            </button>
+          </div>
+          <pre><code id="terraform-main">resource "aws_instance" "vpn" {
+  ami           = "ami-0497a974f8d5dcef8"
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.vpn.id]
+  key_name               = aws_key_pair.vpn.key_name
+  user_data              = file("../scripts/setup.sh")
+
+  tags = {
+    Name = "WireGuard-VPN"
+  }
+}
+
+resource "aws_security_group" "vpn" {
+  ingress {
+    from_port   = 51820
+    to_port     = 51820
+    protocol    = "udp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}</code></pre>
+        </div>
+        <p class="code-note">
+          — that's it. terraform handles the rest. infrastructure as code is
+          beautiful when it works.
+        </p>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="cost">
+        <h2>the damage (on-demand)</h2>
+        <div class="cost-breakdown">
+          <div class="cost-item">
+            <span class="cost-label">ec2 t3.micro (hourly)</span>
+            <span class="cost-amount">$0.0116/hr</span>
+          </div>
+          <div class="cost-item">
+            <span class="cost-label">elastic ip (attached)</span>
+            <span class="cost-amount">$0.00</span>
+          </div>
+          <div class="cost-item">
+            <span class="cost-label">data transfer (first 100GB)</span>
+            <span class="cost-amount">$0.00</span>
+          </div>
+          <div class="cost-divider"></div>
+          <div class="cost-item total">
+            <span class="cost-label">per hour usage</span>
+            <span class="cost-amount">~$0.01/hr</span>
+          </div>
+        </div>
+        <p class="cost-note">
+          spin it up when needed, destroy when done. 10 hours of testing cost me
+          $0.12 total.
+        </p>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="lessons">
+        <h2>what i learned</h2>
+        <ul class="lessons-list">
+          <li>
+            <span class="lesson-title">terraform is actually amazing</span>
+            <span class="lesson-note"
+              >— declarative infrastructure beats exhaustive clicking aws
+              console</span
+            >
+          </li>
+          <li>
+            <span class="lesson-title">networking isn't that scary</span>
+            <span class="lesson-note"
+              >— once you understand iptables and nat, everything clicks</span
+            >
+          </li>
+          <li>
+            <span class="lesson-title">wireguard is fast</span>
+            <span class="lesson-note">— like, really fast.</span>
+          </li>
+          <li>
+            <span class="lesson-title">aws billing alerts are mandatory</span>
+            <span class="lesson-note"
+              >— thankfully, plenty of credit to go around.</span
+            >
+          </li>
+          <li>
+            <span class="lesson-title">automation saves time and live</span>
+            <span class="lesson-note"
+              >— deploy.ps1 turns 20 minutes of work into 60 seconds</span
+            >
+          </li>
+        </ul>
+      </section>
+
+      <div class="divider"></div>
+
+      <section class="cta-section">
+        <h2>check it out</h2>
+        <div class="links">
+          <a
+            href="https://github.com/tgr-wjya/vpn-portfolio"
+            target="_blank"
+            rel="noopener"
+          >
+            → view on github
+          </a>
+          <span class="separator">·</span>
+          <a
+            href="https://github.com/tgr-wjya/vpn-portfolio/blob/main/README.md"
+            target="_blank"
+            rel="noopener"
+          >
+            → read the readme
+          </a>
+          <span class="separator">·</span>
+          <a href="https://tgr-wjya.github.io" target="_blank" rel="noopener">
+            → back to portfolio
+          </a>
+        </div>
+        <p class="warning">
+          ⚠️ reminder: this requires aws credentials, ssh keys, and
+          understanding of cloud costs. not a plug-and-play tutorial.
+        </p>
+      </section>
+
+      <footer>
+        <p class="last-updated">
+          built with terraform, patience, and stackoverflow
+        </p>
+        <div class="deployment-status">
+          <span class="status-indicator" id="deployStatus">●</span>
+          <span class="status-text" id="statusText"
+            >click to simulate deploy</span
+          >
+        </div>
+      </footer>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

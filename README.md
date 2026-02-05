@@ -10,6 +10,10 @@ automated deployment of a wireguard vpn server on aws ec2. i built this to prove
 
 **disclaimer:** if you clone this and leave it running, jeff bezos will personally thank you for the donation. check the `terraform/` directory before you hit deploy.
 
+## architecture
+
+![VPN Infrastructure Diagram](docs\architecture_diagram.png)
+
 ## "features"
 
 - **automated overkill:** ec2 provisioning that works 60% of the time, every time. it either work, or it doesn't
